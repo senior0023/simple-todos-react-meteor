@@ -12,15 +12,24 @@ const toggleChecked = ({ _id, isChecked }) => {
   })
 };
 
+const deleteTask = ({ _id }) => TasksCollection.remove(_id);
+
 export const App = () => {
 
   const tasks = useTracker(() => TasksCollection.find({}, { sort: { createdAt: -1 } }).fetch());
 
   return (
-    <div>
+    <div className="simple-todos-react">
       <h1>Welcome to Meteor!</h1>
-      <ul>
-        { tasks.map(task => <Task key={ task._id } task={ task } onCheckboxClick={ toggleChecked }/>) }
+      <ul className="tasks">
+        { 
+          tasks.map(task => 
+            <Task 
+              key={ task._id } 
+              task={ task } 
+              onCheckboxClick={ toggleChecked }
+              onDeleteClick={ deleteTask }
+            />) }
       </ul>
       
       <TaskForm/>
