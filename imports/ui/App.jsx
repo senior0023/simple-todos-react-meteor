@@ -4,6 +4,7 @@ import _ from 'lodash';
 import Task from './Task';
 import TasksCollection from '/imports/api/tasks';
 import { TaskForm } from './TaskForm';
+import { LoginForm } from './LoginForm';
 
 const toggleChecked = ({ _id, isChecked }) => {
   TasksCollection.update(_id, {
@@ -24,10 +25,19 @@ export const App = () => {
     _.set(filter, 'isChecked', { $ne: true });
   }
 
-  const { tasks, incompleteTasksCount } = useTracker(() => ({
+  const { tasks, incompleteTasksCount, user } = useTracker(() => ({
     tasks: TasksCollection.find(filter, { sort: { createdAt: -1 } }).fetch(),
-    incompleteTasksCount: TasksCollection.find({ isChecked: { $ne: true }}).count()
+    incompleteTasksCount: TasksCollection.find({ isChecked: { $ne: true }}).count(),
+    user: Meteor.user(),
   }));
+
+  if (!user) {
+    return (
+      <div className="simple-todos-react">
+        <LoginForm/>
+      </div>
+    )
+  }
 
   return (
     <div className="simple-todos-react">
@@ -56,7 +66,7 @@ export const App = () => {
             />) }
       </ul>
       
-      <TaskForm/>
+      <TaskForm user={user}/>
     </div>
   );
 };
