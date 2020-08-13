@@ -18,7 +18,7 @@ const sample_tasks = [
 
 function insertTask(task) {
   console.log(task);
-  TasksCollection.insert({ text: task, createdAt: new Date() });
+  TasksCollection.insert({ text: task, isChecked: false, createdAt: new Date() });
 }
 
 Meteor.startup(() => {
